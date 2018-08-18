@@ -3,7 +3,8 @@ package de.tolina.sharevent.api.here;
 /**
  * Resolution to be used.
  * 
- * Note: Only works with t=0 normal.day, t=2 terrain.day, t=3 hybrid.day, t=4 normal.day.transit, t=5 normal.day.grey, t=13 pedestrian.day, t=14 pedestrian.night
+ * Note: Only works with the map scheme types t=0 normal.day, t=2 terrain.day, t=3 hybrid.day, t=4 normal.day.transit, t=5 normal.day.grey, t=13 pedestrian.day, t=14
+ * pedestrian.night
  * 
  */
 @SuppressWarnings("javadoc")
