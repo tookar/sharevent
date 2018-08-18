@@ -1,0 +1,23 @@
+# this configuration is a profile (jpa), do not use profiles in here
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:file:./sharevent
+    username: sharevent
+    password: sharevent
+    name: ${spring.application.name}-datasource
+    hikari:
+      schema: PUBLIC
+      pool-name: ${spring.application.name}-pool
+      auto-commit: false
+  jpa:
+    #show-sql: true
+    database: default
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+    properties:
+      hibernate.id.new_generator_mappings: true
+    open-in-view: true

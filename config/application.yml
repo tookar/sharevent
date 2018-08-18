@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: sharevent
+  profiles:
+    active: jpa,sharedconfig
+
+server:
+  port: 8090
+  servlet:
+    path: /api
