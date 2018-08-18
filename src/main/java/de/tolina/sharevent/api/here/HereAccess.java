@@ -1,4 +1,4 @@
-package de.tolina.sharevent.here;
+package de.tolina.sharevent.api.here;
 
 /**
  * HERE APIs use two random strings, app_id and app_code, to provide secure access to services.<br/>
