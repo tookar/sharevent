@@ -8,3 +8,5 @@ server:
   port: 8090
   servlet:
     path: /api
+
+backend: http://127.0.0.1/api
