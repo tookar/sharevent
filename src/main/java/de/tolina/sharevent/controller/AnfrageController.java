@@ -41,7 +41,7 @@ public class AnfrageController {
 		return stringListDto;
 	}
 
-	@RequestMapping(path = Routes.ANFRAGE_FIND_ROUTE, method = RequestMethod.GET)
+	@RequestMapping(path = Routes.ANFRAGE_FIND_MATCHES, method = RequestMethod.GET)
 	@ResponseStatus(OK)
 	public StringListDto findMatches() {
 		// FIXME hier kommt unsere geniale Matchinglogik zum Einsatz und liefert eine Menge von passenden Treffern
