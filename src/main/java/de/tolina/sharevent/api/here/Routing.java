@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import lombok.NonNull;
@@ -15,7 +16,7 @@ import lombok.NonNull;
  */
 public class Routing {
 
-	private RestTemplateBuilder restTemplateBuilder;
+	private RestTemplate restTemplate;
 	private String lineColorAsHex;
 	private Integer lineWidth;
 	private MapSchemeType mapSchemeType;
@@ -24,7 +25,12 @@ public class Routing {
 	@SuppressWarnings("javadoc")
 	public Routing(@NonNull RestTemplateBuilder restTemplateBuilder, @NonNull String lineColorAsHex, @NonNull Integer lineWidth, @NonNull MapSchemeType mapSchemeType,
 			@NonNull Resolution resolution) {
-		this.restTemplateBuilder = restTemplateBuilder;
+		this(restTemplateBuilder.build(), lineColorAsHex, lineWidth, mapSchemeType, resolution);
+	}
+
+	public Routing(@NonNull RestTemplate restTemplate, @NonNull String lineColorAsHex, @NonNull Integer lineWidth, @NonNull MapSchemeType mapSchemeType,
+			@NonNull Resolution resolution) {
+		this.restTemplate = restTemplate;
 		this.lineColorAsHex = lineColorAsHex;
 		this.lineWidth = lineWidth;
 		this.mapSchemeType = mapSchemeType;
@@ -35,7 +41,7 @@ public class Routing {
 	 * @return a map image
 	 */
 	public byte[] getRouteMapWithIcons(@NonNull List<Waypoint> waypoints, @NonNull Integer widthInPixel, @NonNull Integer heightInPixel) {
-		return restTemplateBuilder.build().getForObject(createRouteMapWithIconsUri(waypoints, widthInPixel, heightInPixel), byte[].class);
+		return restTemplate.getForObject(createRouteMapWithIconsUri(waypoints, widthInPixel, heightInPixel), byte[].class);
 	}
 
 	private URI createRouteMapWithIconsUri(@NonNull List<Waypoint> waypoints, @NonNull Integer widthInPixel, @NonNull Integer heightInPixel) {
