@@ -14,5 +14,7 @@ public class Routes {
 	public static final String PARAM_ORT = "ort";
 	public static final String PARAM_FROM = "from";
 	public static final String PARAM_TO = "to";
+	public static final String PARAM_TRAVELDATE = "traveldate";
+	public static final String PARAM_TRAVELTIME = "traveltime";
 
 }
