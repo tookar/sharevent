@@ -53,7 +53,7 @@ public class LocationFinder {
 	public List<StopLocation> findLocationByName(@NonNull String name) {
 		try {
 			String response = target.queryParam("accessId", ApiAccess.ACCESS_ID)
-					.queryParam("input", "spandau")
+					.queryParam("input", name)
 					.request(MediaType.TEXT_XML).get(String.class);
 
 			InputStream inputStream = IOUtils.toInputStream(response, "UTF-8");
