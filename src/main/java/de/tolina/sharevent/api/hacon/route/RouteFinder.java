@@ -48,15 +48,22 @@ public class RouteFinder {
 	}
 
 	/**
-	 * @return A route from <code>stopLocationIdFrom</code> ot <code>stopLocationIdTo</code> for start time <code>start</code>.
+	 * @return A route from <code>stopLocationIdFrom</code> to <code>stopLocationIdTo</code> for start time <code>start</code>.
 	 */
 	public List<Trip> findRoute(@NonNull String stopLocationExtIdFrom, @NonNull String stopLocationExtIdTo, @NonNull Date start) {
+		return findRoute(stopLocationExtIdFrom, stopLocationExtIdTo, new SimpleDateFormat("yyyy-MM-dd").format(start), new SimpleDateFormat("hh:mm").format(start));
+	}
+
+	/**
+	 * @return A route from <code>stopLocationIdFrom</code> to <code>stopLocationIdTo</code> for the start time.
+	 */
+	public List<Trip> findRoute(@NonNull String stopLocationExtIdFrom, @NonNull String stopLocationExtIdTo, @NonNull String startDate, @NonNull String startTime) {
 		try {
 			String response = target.queryParam("accessId", ApiAccess.ACCESS_ID)
 					.queryParam("originExtId", stopLocationExtIdFrom)
 					.queryParam("destExtId", stopLocationExtIdTo)
-					.queryParam("date", new SimpleDateFormat("yyyy-MM-dd").format(start))
-					.queryParam("time", new SimpleDateFormat("hh:mm").format(start))
+					.queryParam("date", startDate)
+					.queryParam("time", startTime)
 					.request(MediaType.TEXT_XML).get(String.class);
 
 			InputStream inputStream = IOUtils.toInputStream(response, "UTF-8");
