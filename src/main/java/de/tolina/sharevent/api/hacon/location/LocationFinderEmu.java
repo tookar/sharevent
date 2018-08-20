@@ -1,47 +1,30 @@
 package de.tolina.sharevent.api.hacon.location;
 
-import java.io.InputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.ClassPathResource;
 
 import de.tolina.sharevent.api.common.XMLReaderWithoutNamespace;
-import de.tolina.sharevent.api.hacon.ApiAccess;
 import de.tolina.sharevent.api.hacon.location.name.LocationList;
 import de.tolina.sharevent.api.hacon.location.name.StopLocation;
 import lombok.NonNull;
 
-/**
- * Calls the real HaCon API.
- */
-public class LocationFinder implements ILocationFinder {
+public class LocationFinderEmu implements ILocationFinder {
 
-	private static final Logger LOG = Logger.getLogger(LocationFinder.class.getName());
+	private static final Logger LOG = Logger.getLogger(LocationFinderEmu.class.getName());
 
-	private Client client;
-	private WebTarget target;
 	private Unmarshaller locationListUnmarshaller;
 
 	@SuppressWarnings("javadoc")
-	public LocationFinder() {
-		client = ClientBuilder.newClient();
-		target = client.target("https://demo.hafas.de/bvg-hackathon/restproxy/location.name");
-
+	public LocationFinderEmu() {
 		try {
 			JAXBContext context = JAXBContext.newInstance(LocationList.class);
 			locationListUnmarshaller = context.createUnmarshaller();
@@ -52,16 +35,10 @@ public class LocationFinder implements ILocationFinder {
 
 	@Override
 	public List<StopLocation> findLocationByName(@NonNull String name) {
+		final String filename = "emu/api/hacon/" + "location_" + name + ".xml";
+
 		try {
-			String response = target.queryParam("accessId", ApiAccess.ACCESS_ID)
-					.queryParam("input", name)
-					.request(MediaType.TEXT_XML).get(String.class);
-
-			InputStream inputStream = IOUtils.toInputStream(response, "UTF-8");
-			Path path = Paths.get("location_" + name + ".xml");
-			FileUtils.write(path.toFile(), response, "UTF-8");
-
-			XMLStreamReader streamReader = XMLInputFactory.newFactory().createXMLStreamReader(inputStream);
+			XMLStreamReader streamReader = XMLInputFactory.newFactory().createXMLStreamReader(new ClassPathResource(filename).getInputStream());
 			XMLReaderWithoutNamespace readerWithoutNamespace = new XMLReaderWithoutNamespace(streamReader);
 
 			LocationList locationList = (LocationList) locationListUnmarshaller.unmarshal(readerWithoutNamespace);

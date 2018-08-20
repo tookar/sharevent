@@ -14,7 +14,7 @@ import lombok.NonNull;
  * 
  * parameter documentaion: https://developer.here.com/documentation/map-image/topics/resource-routing.html
  */
-public class Routing {
+public class Routing implements IRouting {
 
 	private RestTemplate restTemplate;
 	private String lineColorAsHex;
@@ -37,9 +37,7 @@ public class Routing {
 		this.resolution = resolution;
 	}
 
-	/**
-	 * @return a map image
-	 */
+	@Override
 	public byte[] getRouteMapWithIcons(@NonNull List<Waypoint> waypoints, @NonNull Integer widthInPixel, @NonNull Integer heightInPixel) {
 		return restTemplate.getForObject(createRouteMapWithIconsUri(waypoints, widthInPixel, heightInPixel), byte[].class);
 	}

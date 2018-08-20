@@ -1,6 +1,8 @@
 package de.tolina.sharevent.api.hacon.route;
 
 import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -17,17 +19,17 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import de.tolina.sharevent.api.common.XMLReaderWithoutNamespace;
 import de.tolina.sharevent.api.hacon.ApiAccess;
-
 import lombok.NonNull;
 
 /**
  * Utility to find a route.
  */
-public class RouteFinder {
+public class RouteFinder implements IRouteFinder {
 
 	private static final Logger LOG = Logger.getLogger(RouteFinder.class.getName());
 
@@ -48,16 +50,12 @@ public class RouteFinder {
 		}
 	}
 
-	/**
-	 * @return A route from <code>stopLocationIdFrom</code> to <code>stopLocationIdTo</code> for start time <code>start</code>.
-	 */
+	@Override
 	public List<Trip> findRoute(@NonNull String stopLocationExtIdFrom, @NonNull String stopLocationExtIdTo, @NonNull Date start) {
 		return findRoute(stopLocationExtIdFrom, stopLocationExtIdTo, new SimpleDateFormat("yyyy-MM-dd").format(start), new SimpleDateFormat("hh:mm").format(start));
 	}
 
-	/**
-	 * @return A route from <code>stopLocationIdFrom</code> to <code>stopLocationIdTo</code> for the start time.
-	 */
+	@Override
 	public List<Trip> findRoute(@NonNull String stopLocationExtIdFrom, @NonNull String stopLocationExtIdTo, @NonNull String startDate, @NonNull String startTime) {
 		try {
 			String response = target.queryParam("accessId", ApiAccess.ACCESS_ID)
@@ -70,6 +68,9 @@ public class RouteFinder {
 			InputStream inputStream = IOUtils.toInputStream(response, "UTF-8");
 			XMLStreamReader streamReader = XMLInputFactory.newFactory().createXMLStreamReader(inputStream);
 			XMLReaderWithoutNamespace readerWithoutNamespace = new XMLReaderWithoutNamespace(streamReader);
+
+			Path path = Paths.get("location_" + stopLocationExtIdFrom + "_" + stopLocationExtIdTo + ".xml");
+			FileUtils.write(path.toFile(), response, "UTF-8");
 
 			TripList tripList = (TripList) locationListUnmarshaller.unmarshal(readerWithoutNamespace);
 			return tripList.getTrip();
